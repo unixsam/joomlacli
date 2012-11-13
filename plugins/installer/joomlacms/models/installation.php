@@ -109,7 +109,7 @@ class InstallerJoomlacmsModelInstallation extends KModelBase
 			
 			if ($installationModeldatabase == false || $installationModelConfiguration == false)
 			{
-				JApplicationCli::getInstance()->out(JText::sprintf('PLG_JOOMLACMS_INSTALLATION_CANT_INSTANCE_MODELS', $modelPrefix.'Database', $modelPrefix.'Configuration', $source_path));
+				JApplicationCli::getInstance()->out(JText::_('PLG_JOOMLACMS_INSTALLATION_CANT_AUTOMATISE_INSTALLATION'));
 			}
 			else 
 			{
