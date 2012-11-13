@@ -1,0 +1,85 @@
+{
+    "install":{
+    	"name": "PLG_CORE_COMMAND_INSTALL_NAME",
+    	"desc": "PLG_CORE_COMMAND_INSTALL_DESC",
+    	"short_desc": "PLG_CORE_COMMAND_INSTALL_SHORT_DESC",
+        "options":[
+            {
+                "name":"<folder>",
+                "desc":"PLG_CORE_COMMAND_INSTALL_PARAM_FOLDER_DESC"
+            },
+            {
+                "name":"-v",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_V_DESC"
+            },
+            {
+                "name":"-d",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_D_DESC"
+            },
+            {
+                "name":"-u",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_U_DESC"
+            },
+            {
+                "name":"-p",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_P_DESC"
+            },
+            {
+                "name":"--email",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_EMAIL_DESC"
+            },
+            {
+                "name":"--git_owner",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_OWNER_DESC"
+            },
+            {
+                "name":"--git_repo",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_REPO_DESC"
+            },
+            {
+                "name":"--db_type",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_TYPE_DESC"
+            },
+            {
+                "name":"--db_host",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_HOST_DESC"
+            },
+            {
+                "name":"--db_user",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_USER_DESC"
+            },
+            {
+                "name":"--db_pass",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_PASS_DESC"
+            },
+            {
+                "name":"--db_name",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_NAME_DESC"
+            },
+            {
+                "name":"--db_prefix",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_PREFIX_DESC"
+            }
+        ]
+    },
+	"versions": {
+		"name": "PLG_CORE_COMMAND_VERSIONS_NAME",
+    	"desc": "PLG_CORE_COMMAND_VERSIONS_DESC",
+    	"short_desc": "PLG_CORE_COMMAND_VERSIONS_SHORT_DESC",
+    	"options": [
+    		{
+                "name":"--git_owner",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_OWNER_DESC"
+            },
+            {
+                "name":"--git_repo",
+                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_REPO_DESC"
+            }
+    	]
+	},
+	"dbsetup": {
+		"name": "PLG_CORE_COMMAND_DBSETUP_NAME",
+		"desc": "PLG_CORE_COMMAND_DBSETUP_DESC",
+    	"short_desc": "PLG_CORE_COMMAND_DBSETUP_SHORT_DESC"
+	}
+}

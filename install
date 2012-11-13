@@ -1,0 +1,23 @@
+#!/bin/bash
+echo "Database configuration\n";
+
+mkdir -p ~/.joomlacli/var/config;
+echo "Please enter database type: ";
+read db_type;
+echo "Please enter database host: ";
+read db_host;
+echo "Please enter database user: ";
+read db_user;
+echo "Please enter database password: ";
+read db_pass;
+
+echo '<?php \nclass JConfigDatabase { \n\tpublic $driver = "'$db_type'"; \n\tpublic $host = "'$db_host'"; \n\tpublic $user = "'$db_user'"; \n\tpublic $pass = "'$db_pass'"; \n}' > database.php;
+mv -f database.php ~/.joomlacli/var/config;
+
+echo "export PATH=$PATH:~/.joomlacli" >> ~/.bash_profile
+
+echo "Copying files..";
+cp -R -f . ~/.joomlacli;
+
+echo "you can find joomlacli files in your home '.joomlacli' directory";
+echo "command 'joomla' is ready for you!";
