@@ -9,6 +9,19 @@ class InstallerJoomlacmsModelInstallation extends KModelBase
 {
 	public function initialise($source_path, $arguments)
 	{
+		// Add the logger.
+		JLog::addLogger(
+		     // Pass an array of configuration options
+		    array(
+		            // Set the name of the log file
+		            'text_file' => 'command.'.$date.'.php',
+		            // (optional) you can change the directory
+		            'text_file_path' => JPATH_VAR.'/logs/'
+		     ),
+		     JLog::INFO,
+		     'Command'
+		);
+		
 		if (!JFolder::exists($source_path.'/installation'))
 		{
 			throw new RuntimeException(JText::sprintf('PLG_JOOMLACMS_INSTALLATION_ERROR_CANT_FIND_INSTALLATION_APPLICATION_CURRENT_FOLDER', $source_path));
@@ -77,10 +90,10 @@ class InstallerJoomlacmsModelInstallation extends KModelBase
 			
 			JModelLegacy::addIncludePath($source_path.'/installation/models');
 			
-			$modelPrefix = 'installationmodel';
+			$modelPrefix = 'InstallationModel';
 			if ($version == '2.5')
 			{
-				$modelPrefix = 'j'.$modelPrefix;;
+				$modelPrefix = 'J'.$modelPrefix;;
 			}
 			
 			if ($arguments['v'] <= '2.5.4')
@@ -94,55 +107,62 @@ class InstallerJoomlacmsModelInstallation extends KModelBase
 			//create configuration and root user
 			$installationModelConfiguration = JModelLegacy::getInstance('configuration', $modelPrefix, array('dbo' => null));
 			
-			JApplicationCli::getInstance()->out(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_DATABASE'));
-			
-			$logEntry = new JLogEntry(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_DATABASE'), JLog::INFO, 'INSTALLATION');
-			JLog::add($logEntry);
-			
-			if ($version == '2.5')
+			if ($installationModeldatabase == false || $installationModelConfiguration == false)
 			{
-				$return = $installationModeldatabase->initialise($options);
-				// Check if creation of database tables was successful
-				if (!$return)
-				{
-					throw new RuntimeException($installationModeldatabase->getError());
-				}
+				JApplicationCli::getInstance()->out(JText::sprintf('PLG_JOOMLACMS_INSTALLATION_CANT_INSTANCE_MODELS', $modelPrefix.'Database', $modelPrefix.'Configuration', $source_path));
 			}
-			else if ($version == '3.0')
+			else 
 			{
-				$return = $installationModeldatabase->createDatabase($options);
-				// Check if creation of database tables was successful
-				if (!$return)
+				JApplicationCli::getInstance()->out(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_DATABASE'));
+				
+				$logEntry = new JLogEntry(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_DATABASE'), JLog::INFO, 'INSTALLATION');
+				JLog::add($logEntry);
+				
+				if ($version == '2.5')
 				{
-					throw new RuntimeException($installationModeldatabase->getError());
+					$return = $installationModeldatabase->initialise($options);
+					// Check if creation of database tables was successful
+					if (!$return)
+					{
+						throw new RuntimeException($installationModeldatabase->getError());
+					}
+				}
+				else if ($version == '3.0')
+				{
+					$return = $installationModeldatabase->createDatabase($options);
+					// Check if creation of database tables was successful
+					if (!$return)
+					{
+						throw new RuntimeException($installationModeldatabase->getError());
+					}
+					
+					$options['db_created'] = 1;
+					
+					$returnDatabase = $installationModeldatabase->createTables($options);
+					// Check if the database was initialised
+					if (!$returnDatabase)
+					{
+						throw new RuntimeException($installationModeldatabase->getError());
+					}
 				}
 				
-				$options['db_created'] = 1;
+				JApplicationCli::getInstance()->out(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_CONFIGURATION'));
 				
-				$returnDatabase = $installationModeldatabase->createTables($options);
-				// Check if the database was initialised
-				if (!$returnDatabase)
-				{
-					throw new RuntimeException($installationModeldatabase->getError());
+				$logEntry = new JLogEntry(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_CONFIGURATION'), JLog::INFO, 'INSTALLATION');
+				JLog::add($logEntry);
+				
+				//create configuration
+				$returnConfiguration = $installationModelConfiguration->setup($options);
+				if (!$returnConfiguration) {
+					throw new RuntimeException($installationModelConfiguration->getError());
 				}
+				
+				//remove installation dir
+				JFolder::delete($source_path.'/installation');
+				
+				//info user and pass
+				JApplicationCli::getInstance()->out(JText::sprintf('PLG_JOOMLACMS_INSTALLATION_MESSAGE', $admin_user, $admin_password));
 			}
-			
-			JApplicationCli::getInstance()->out(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_CONFIGURATION'));
-			
-			$logEntry = new JLogEntry(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_CONFIGURATION'), JLog::INFO, 'INSTALLATION');
-			JLog::add($logEntry);
-			
-			//create configuration
-			$returnConfiguration = $installationModelConfiguration->setup($options);
-			if (!$returnConfiguration) {
-				throw new RuntimeException($installationModelConfiguration->getError());
-			}
-			
-			//remove installation dir
-			JFolder::delete($source_path.'/installation');
-			
-			//info user and pass
-			JApplicationCli::getInstance()->out(JText::sprintf('PLG_JOOMLACMS_INSTALLATION_MESSAGE', $admin_user, $admin_password));
 		}
 		
 		$logEntry = new JLogEntry(JText::_('PLG_JOOMLACMS_INSTALLATION_FINISHED_INSTALLATION'), JLog::INFO, 'INSTALLATION');

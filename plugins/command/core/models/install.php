@@ -122,6 +122,18 @@ class CommandCoreModelInstall extends KModelBase
 
 	public function prepareVersion()
 	{
+		// Add the logger.
+		JLog::addLogger(
+		     // Pass an array of configuration options
+		    array(
+		            // Set the name of the log file
+		            'text_file' => 'command.'.$date.'.php',
+		            // (optional) you can change the directory
+		            'text_file_path' => __DIR__.'/var/logs/'
+		     ),
+		     JLog::INFO,
+		     'Command'
+		);
 		if (!isset($this->arguments['git_owner']))
 		{
 			$this->arguments['git_owner'] = 'joomla';
