@@ -42,7 +42,7 @@ class InstallerJoomlacmsModelInstallation extends KModelBase
 			JFactory::$application = null;
 			$installation = JFactory::getApplication('installation');
 			
-			$database_prefix = !empty($arguments['db_prefix']) ? $arguments['db_prefix'] : 'jos_' ;
+			$database_prefix = !empty($arguments['db_prefix']) ? $arguments['db_prefix'] : chr(97 + mt_rand(0, 25)).chr(97 + mt_rand(0, 25)).chr(97 + mt_rand(0, 25)).'_' ;
 			$database_name = !empty($arguments['db_name']) ? $arguments['db_name'] : 'joo_'.str_replace('.','_',basename($source_path)) ;
 			
 			require_once JPATH_CONFIG.'/database.php';
