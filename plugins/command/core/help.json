@@ -13,10 +13,6 @@
                 "desc":"PLG_CORE_COMMAND_INSTALL_ARG_V_DESC"
             },
             {
-                "name":"-d",
-                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_D_DESC"
-            },
-            {
                 "name":"-u",
                 "desc":"PLG_CORE_COMMAND_INSTALL_ARG_U_DESC"
             },
@@ -27,14 +23,6 @@
             {
                 "name":"--email",
                 "desc":"PLG_CORE_COMMAND_INSTALL_ARG_EMAIL_DESC"
-            },
-            {
-                "name":"--git_owner",
-                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_OWNER_DESC"
-            },
-            {
-                "name":"--git_repo",
-                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_REPO_DESC"
             },
             {
                 "name":"--db_type",
@@ -59,6 +47,10 @@
             {
                 "name":"--db_prefix",
                 "desc":"PLG_CORE_COMMAND_INSTALL_ARG_DB_PREFIX_DESC"
+            },
+            {
+	            	"name":"usage",
+	            	"desc":"joomla install <folder>"
             }
         ]
     },
@@ -66,20 +58,22 @@
 		"name": "PLG_CORE_COMMAND_VERSIONS_NAME",
     	"desc": "PLG_CORE_COMMAND_VERSIONS_DESC",
     	"short_desc": "PLG_CORE_COMMAND_VERSIONS_SHORT_DESC",
-    	"options": [
-    		{
-                "name":"--git_owner",
-                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_OWNER_DESC"
-            },
+      "options":[
             {
-                "name":"--git_repo",
-                "desc":"PLG_CORE_COMMAND_INSTALL_ARG_GIT_REPO_DESC"
+	            	"name":"usage",
+	            	"desc":"joomla versions"
             }
-    	]
+      ]
 	},
 	"dbsetup": {
 		"name": "PLG_CORE_COMMAND_DBSETUP_NAME",
 		"desc": "PLG_CORE_COMMAND_DBSETUP_DESC",
-    	"short_desc": "PLG_CORE_COMMAND_DBSETUP_SHORT_DESC"
+    	"short_desc": "PLG_CORE_COMMAND_DBSETUP_SHORT_DESC",
+      "options":[
+            {
+	            	"name":"usage",
+	            	"desc":"joomla dbsetup"
+            }
+      ]
 	}
 }
