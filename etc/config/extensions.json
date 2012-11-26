@@ -1,0 +1,5 @@
+[
+	{"identifier": "K2", "url": "http://getk2.org/update.xml"},
+	{"identifier": "Akeeba Backup", "url": "http://nocdn.akeebabackup.com/updates/abcore.xml"},
+	{"identifier": "JCE Editor", "url": "https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1"}
+]
