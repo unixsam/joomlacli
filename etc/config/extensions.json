@@ -1,5 +1,5 @@
 [
-	{"identifier": "K2", "desc": "CCK for Joomla", "url": "http://getk2.org/update.xml"},
-	{"identifier": "Akeeba Backup", "desc": "Backup for Joomla", "url": "http://nocdn.akeebabackup.com/updates/abcore.xml"},
-	{"identifier": "JCE Editor", "desc": "Editor for Joomla", "url": "https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1"}
+	{"name": "K2", "shortname": "k2", "desc": "CCK for Joomla", "url": "http://getk2.org/update.xml"},
+	{"name": "Akeeba Backup", "shortname": "akeeba", "desc": "Backup for Joomla", "url": "http://nocdn.akeebabackup.com/updates/abcore.xml"},
+	{"name": "JCE Editor", "shortname": "jce", "desc": "Editor for Joomla", "url": "https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1"}
 ]

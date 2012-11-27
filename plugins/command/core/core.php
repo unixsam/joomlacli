@@ -217,7 +217,7 @@ class PlgCommandCore extends JPluginCommand
 
 				foreach ($extensions as $extension)
 				{
-					$extensionsList[] = array($extension->identifier, $extension->desc);
+					$extensionsList[] = array($extension->name, $extension->desc);
 				}
 
 				JApplicationCli::getInstance()->out(JText::_('ADD_COMMAND_LIST_EXTENSIONS'));
