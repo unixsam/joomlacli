@@ -11,7 +11,7 @@
  *
  * @package  Joomlacli
  * @since    1.0
- **/
+ */
 class PlgExecutionCli extends JPlugin
 {
 	/**

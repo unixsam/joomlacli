@@ -20,7 +20,7 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 	 * @return  void
 	 * 
 	 * @since   1.0
-	 **/
+	 */
 	public function initialise()
 	{
 		$input = JApplicationCli::getInstance()->input;

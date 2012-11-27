@@ -1,4 +1,15 @@
 {
+    "add":{
+        "name": "PLG_CORE_COMMAND_ADD_NAME",
+        "desc": "PLG_CORE_COMMAND_ADD_DESC",
+        "short_desc": "PLG_CORE_COMMAND_ADD_SHORT_DESC",
+        "options": [
+            {
+                "name": "<extension>",
+                "desc": "PLG_CORE_COMMAND_PARAM_EXTENSION_DESC"
+            }
+        ]
+    },
     "install":{
     	"name": "PLG_CORE_COMMAND_INSTALL_NAME",
     	"desc": "PLG_CORE_COMMAND_INSTALL_DESC",

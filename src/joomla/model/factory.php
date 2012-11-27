@@ -51,7 +51,7 @@ abstract class JModelFactory
 
 		if (!class_exists($class_name))
 		{
-			throw new RuntimeException(JText::_('JERROR_MODEL_CANT_FIND_CLASS'));
+			throw new RuntimeException(JText::sprintf('ERROR_MODEL_CANT_FIND_CLASS', end($parts)));
 		}
 
 		self::$_instances[$key] = new $class_name($config);

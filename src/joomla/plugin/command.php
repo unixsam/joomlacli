@@ -22,7 +22,7 @@ class JPluginCommand extends JPlugin
 	 * @return  void
 	 * 
 	 * @since   1.0
-	 **/
+	 */
 	final public function onExecuteCommand()
 	{
 		$input		 = JApplicationCli::getInstance()->input;

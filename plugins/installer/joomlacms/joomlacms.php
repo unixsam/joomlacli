@@ -20,7 +20,7 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 	 * @return  void
 	 * 
 	 * @since   1.0
-	 **/
+	 */
 	public function onScafolding()
 	{
 		$input = JApplicationCli::getInstance()->input;
@@ -74,7 +74,7 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 	 * @return  Array
 	 * 
 	 * @since   1.0
-	 **/
+	 */
 	public function onPrepareVersion()
 	{
 		$input = JApplicationCli::getInstance()->input;
@@ -123,7 +123,7 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 	 * @return  void
 	 * 
 	 * @since   1.0
-	 **/
+	 */
 	public function onListVersions()
 	{
 		$input = JApplicationCli::getInstance()->input;

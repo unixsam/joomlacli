@@ -52,7 +52,7 @@ jimport('joomla.filesystem.file');
  *
  * @package  Joomlacli
  * @since    1.0
- **/
+ */
 final class Joomlacli extends JApplicationCli
 {
 	/**
