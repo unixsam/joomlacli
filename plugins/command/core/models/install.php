@@ -52,7 +52,9 @@ class CommandCoreModelInstall extends JModelBase
 		// Capture PHP errors
 		$track_errors = ini_get('track_errors');
 		ini_set('track_errors', true);
-		$http = JHttpFactory::getHttp();
+		$options = new JRegistry;
+		$options->set('curl.certpath', JPATH_ETC . '/transport/cacert.pem');
+		$http = JHttpFactory::getHttp($options);
 		$response = $http->get($url);
 		if (200 != $response->code)
 		{
