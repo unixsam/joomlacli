@@ -15,5 +15,4 @@ if (!class_exists('JLoader'))
 }
 
 // Setup the autoloader for our overloaded Joomla Platform classes.
-JLoader::register('JPluginHelper', __DIR__ . '/joomla/plugin/helper.php', true);
 JLoader::registerPrefix('J', __DIR__ . '/joomla');

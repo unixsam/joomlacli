@@ -1,6 +1,6 @@
 [
-	{"name": "Akeeba Backup", "shortname": "akeeba", "desc": "Backup, restore and transfer your site in seconds with the most popular Joomla! component.", "url": "http://nocdn.akeebabackup.com/updates/abcore.xml"},
-	{"name": "Admin Tools", "shortname": "admintools", "desc": "Update Joomla! easily, perform common administration tasks swiftly and enhance your site's security with the most comprehensive tool.", "url": "http://cdn.akeebabackup.com/updates/atcore.xml"},
-	{"name": "JCE Editor", "shortname": "jce", "desc": "JCE makes creating and editing content easy", "url": "https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1"},
-	{"name": "K2", "shortname": "k2", "desc": "The powerful content extension for Joomla! ", "url": "http://getk2.org/update.xml"}
+	{"name": "Akeeba Backup", "shortname": "akeeba", "element": "com_akeeba", "desc": "Backup, restore and transfer your site in seconds with the most popular Joomla! component.", "url": "http://nocdn.akeebabackup.com/updates/abcore.xml"},
+	{"name": "Admin Tools", "shortname": "admintools", "element": "com_admintools", "desc": "Update Joomla! easily, perform common administration tasks swiftly and enhance your site's security with the most comprehensive tool.", "url": "http://cdn.akeebabackup.com/updates/atcore.xml"},
+	{"name": "JCE Editor", "shortname": "jce", "element": "com_jce", "desc": "JCE makes creating and editing content easy", "url": "https://www.joomlacontenteditor.net/index.php?option=com_updates&view=update&format=xml&id=1"},
+	{"name": "K2", "shortname": "k2", "element": "com_k2", "desc": "The powerful content extension for Joomla! ", "url": "http://getk2.org/update.xml"}
 ]

@@ -16,7 +16,7 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Plugin
  * @since       11.1
  */
-abstract class JPluginHelper
+abstract class JCliPluginHelper
 {
 	/**
 	 * A persistent cache of the loaded plugins.

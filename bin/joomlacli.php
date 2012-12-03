@@ -83,7 +83,7 @@ final class Joomlacli extends JApplicationCli
 		parent::__construct($input, $config, $dispatcher);
 
 		// Import execution plugin
-		JPluginHelper::importPlugin('execution');
+		JCliPluginHelper::importPlugin('execution');
 
 		// Set Language
 		$this->language = JFactory::getLanguage();
@@ -135,7 +135,7 @@ final class Joomlacli extends JApplicationCli
 			$logEntry = new JLogEntry($text, JLog::INFO, 'COMMAND');
 			JLog::add($logEntry);
 
-			JPluginHelper::importPlugin('command');
+			JCliPluginHelper::importPlugin('command');
 			$this->triggerEvent('onExecuteCommand');
 		} else {
 			$this->out(JText::_('HELP_COMMAND'));

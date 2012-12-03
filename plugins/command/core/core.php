@@ -38,7 +38,7 @@ class PlgCommandCore extends JPluginCommand
 			$input->set('git_repo', 'joomla-cms');
 		}
 
-		JPluginHelper::importPlugin('installer');
+		JCliPluginHelper::importPlugin('installer');
 		JApplicationCli::getInstance()->triggerEvent('onListVersions');
 	}
 

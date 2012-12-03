@@ -14,7 +14,30 @@
  */
 class CommandCoreModelAdd extends JModelBase
 {
+	/**
+	 * Extension object from extensions.json
+	 * 
+	 * @var  Object
+	 * 
+	 * @since  1.1
+	 */
 	protected $extension;
+
+	/**
+	 * The JConfig from joomla.
+	 *
+	 * @var    JRegistry
+	 * @since  1.1
+	 */
+	protected $jconfig;
+
+	/**
+	 * The database driver.
+	 *
+	 * @var    JDatabaseDriver
+	 * @since  1.1
+	 */
+	protected $db;
 
 	/**
 	 * Install extension
@@ -33,9 +56,20 @@ class CommandCoreModelAdd extends JModelBase
 			Throw new RuntimeException(JText::sprintf('ERROR_CURRENT_DIRECTORY_IS_NOT_A_VALID_APPLICATION_DIRECTORY', 'Joomla CMS'));
 		}
 
+		// Load JConfig
+		$this->loadJConfig();
+
+		// Connect with your joomla db
+		$this->connectDBO();
+
 		if (empty($input->args[0]) || !$this->findExtension($input->args[0]))
 		{
 			Throw new RuntimeException(JText::sprintf('ERROR_EXTENSION_NOT_FOUND_OR_NOT_AVALIABLE', $input->args[0]));
+		}
+
+		if (!$this->canInstall())
+		{
+			Throw new RuntimeException(JText::_('ERROR_EXTENSION_ALREADY_EXISTS'));
 		}
 
 		$cli->out(JText::sprintf('ADD_COMMAND_REQUEST_INFO_FORM_URL', $this->extension->name));
@@ -62,6 +96,7 @@ class CommandCoreModelAdd extends JModelBase
 				$package_url = $node->downloads->downloadurl;
 				$name = $node->name;
 				$type = $node->type;
+				$element = $node->element;
 			}
 		}
 
@@ -73,8 +108,92 @@ class CommandCoreModelAdd extends JModelBase
 		$cli->out(JText::sprintf('ADD_COMMAND_DOWNLOAD_COMPLETE', $name));
 		$cli->out(JText::_('ADD_COMMAND_PREPARE_TO_INSTALL'));
 
+		// Get an installer instance
+		$installer = JInstaller::getInstance();
+
+		$package = array();
+		$package['type'] = $type;
+
+		// Extract to tmp folder
+		$package['dir'] = $this->jconfig->get('tmp');
+		$package['dir'] .= DIRECTORY_SEPARATOR . $file;
+
+		die($package['dir']);
+		JArchive::extract(JPATH_TMP . '/' . $file, $package['dir']);
+
+		// Install the package
+		if (!$installer->install($package['dir']))
+		{
+			// There was an error installing the package
+			$msg = JText::sprintf('COM_INSTALLER_INSTALL_ERROR', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
+			$result = false;
+		} else {
+			// Package installed sucessfully
+			$msg = JText::sprintf('COM_INSTALLER_INSTALL_SUCCESS', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
+			$result = true;
+		}
+	}
+
+	/**
+	 * Set JConfig
+	 * 
+	 * @return Void
+	 * 
+	 * @since  1.1
+	 **/
+	private function loadJConfig()
+	{
 		// Initialise current joomla paths
 		$source_path = JApplicationCli::getInstance()->get('cwd');
+
+		// Get JConfiguration object
+		require_once $source_path . DIRECTORY_SEPARATOR . 'configuration.php';
+		$this->jconfig = new JRegistry;
+		$this->jconfig->loadObject(new JConfig);
+	}
+
+	/**
+	 * Connect with source joomla database
+	 * 
+	 * @return Boolean
+	 * 
+	 * @since  1.1
+	 **/
+	private function connectDBO()
+	{
+		$options = array();
+		$options['driver'] = $this->jconfig->get('dbtype');
+		$options['host'] = $this->jconfig->get('host');
+		$options['database'] = $this->jconfig->get('db');
+		$options['user'] = $this->jconfig->get('user');
+		$options['password'] = $this->jconfig->get('password');
+		$options['prefix'] = $this->jconfig->get('dbprefix');
+
+		$this->db = JDatabaseDriver::getInstance($options);
+
+		return true;
+	}
+
+	/**
+	 * Check if current db if extension already exists
+	 * 
+	 * @return Boolean
+	 * 
+	 * @since  1.1
+	 */
+	private function canInstall()
+	{
+		$query = $this->db->getQuery(true);
+
+		$query->select('e.extension_id');
+		$query->from('#__extensions AS e');
+		$query->where('e.element = "' . $this->extension->element . '"');
+		$this->db->setQuery($query);
+
+		$extension_id = $this->db->loadResult();
+
+		$return = intval($extension_id) ? false : true;
+		return $return;
 	}
 
 	/**

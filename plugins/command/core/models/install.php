@@ -152,7 +152,7 @@ class CommandCoreModelInstall extends JModelBase
 			throw new RuntimeException(JText::_('PLG_CORE_INSTALL_EXTRACT_FILE_ERROR'));
 		}
 
-		JPluginHelper::importPlugin('installer');
+		JCliPluginHelper::importPlugin('installer');
 		JApplicationCli::getInstance()->triggerEvent('onScafolding');
 	}
 
@@ -180,7 +180,7 @@ class CommandCoreModelInstall extends JModelBase
 			$input->set('git_repo', 'joomla-cms');
 		}
 
-		JPluginHelper::importPlugin('installer');
+		JCliPluginHelper::importPlugin('installer');
 		$versionsInfo = JApplicationCli::getInstance()->triggerEvent('onPrepareVersion');
 
 		// Set filename and version
