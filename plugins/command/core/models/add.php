@@ -62,6 +62,9 @@ class CommandCoreModelAdd extends JModelBase
 		// Connect with your joomla db
 		$this->connectDBO();
 
+		// Define your joomla version
+		$this->loadJVersion();
+
 		if (empty($input->args[0]) || !$this->findExtension($input->args[0]))
 		{
 			Throw new RuntimeException(JText::sprintf('ERROR_EXTENSION_NOT_FOUND_OR_NOT_AVALIABLE', $input->args[0]));
@@ -74,18 +77,43 @@ class CommandCoreModelAdd extends JModelBase
 
 		$cli->out(JText::sprintf('ADD_COMMAND_REQUEST_INFO_FORM_URL', $this->extension->name));
 
-		$options = new JRegistry;
-		$options->set('curl.certpath', JPATH_ETC . '/transport/cacert.pem');
-		$http = JHttpFactory::getHttp($options);
-		$response = $http->get($this->extension->url);
-		if (200 != $response->code)
+		$tmpConfig = new JRegistry;
+		$tmpConfig->set('cache_path', JPATH_ETC . DIRECTORY_SEPARATOR . 'cache');
+
+		// 1 day cache
+		$tmpConfig->set('cachetime', 60 * 60 * 24);
+		$tmpConfig->set('caching', 1);
+		$tmpConfig->set('cache_handler', 'file');
+
+		JFactory::$config = $tmpConfig;
+
+		$cache = JCache::getInstance('output', $tmpConfig);
+		$cache->setCaching(true);
+		$cache_id = md5($this->extension->url);
+		$cache_group = 'manifests';
+
+		$xml = $cache->get($cache_id, $cache_group);
+
+		if (empty($xml))
 		{
-			// TODO: Add a 'mark bad' setting here somehow
-			JLog::add(JText::sprintf('JLIB_UPDATER_ERROR_EXTENSION_OPEN_URL', $url), JLog::WARNING, 'jerror');
-			return false;
+			$options = new JRegistry;
+			$options->set('curl.certpath', JPATH_ETC . '/transport/cacert.pem');
+			$http = JHttpFactory::getHttp($options);
+			$response = $http->get($this->extension->url);
+			if (200 != $response->code)
+			{
+				// TODO: Add a 'mark bad' setting here somehow
+				JLog::add(JText::sprintf('JLIB_UPDATER_ERROR_EXTENSION_OPEN_URL', $this->extension->url), JLog::WARNING, 'jerror');
+				return false;
+			}
+			$xml = $response->body;
+			$cache->store($xml, $cache_id, $cache_group);
 		}
 
-		$updateXML = simplexml_load_string($response->body);
+		$updateXML = simplexml_load_string($xml);
+
+		JFactory::$config = null;
+
 		$latest_version = 0;
 		$package_url = null;
 		foreach ($updateXML as $node)
@@ -111,15 +139,32 @@ class CommandCoreModelAdd extends JModelBase
 		// Get an installer instance
 		$installer = JInstaller::getInstance();
 
+		// Initialise current joomla paths
+		$source_path = JApplicationCli::getInstance()->get('cwd');
+
+		// Package
 		$package = array();
 		$package['type'] = $type;
+		$package['packagefile'] = null;
+		$package['extractdir'] = null;
+		$package['dir'] = $this->jconfig->get('tmp_path');
+		$package['dir'] .= DIRECTORY_SEPARATOR . JFile::stripExt($file);
 
 		// Extract to tmp folder
-		$package['dir'] = $this->jconfig->get('tmp');
-		$package['dir'] .= DIRECTORY_SEPARATOR . $file;
-
-		die($package['dir']);
 		JArchive::extract(JPATH_TMP . '/' . $file, $package['dir']);
+
+		JFactory::$database = $this->db;
+
+		// Initialise
+
+		define('JVERSION', $this->jversion);
+		define('JPATH_SITE', $source_path);
+		define('JPATH_CONFIGURATION', $source_path);
+		define('JPATH_INSTALLATION', $source_path . '/installation');
+		define('JPATH_ADMINISTRATOR', $source_path . '/administrator');
+		define('JPATH_MANIFESTS',     JPATH_ADMINISTRATOR . '/manifests');
+		define('JPATH_CACHE', JPATH_ADMINISTRATOR . '/cache');
+		define('JPATH_PLUGINS', JPATH_SITE . '/plugins');
 
 		// Install the package
 		if (!$installer->install($package['dir']))
@@ -132,6 +177,8 @@ class CommandCoreModelAdd extends JModelBase
 			$msg = JText::sprintf('COM_INSTALLER_INSTALL_SUCCESS', JText::_('COM_INSTALLER_TYPE_TYPE_' . strtoupper($package['type'])));
 			$result = true;
 		}
+
+		$cli->out($msg);
 	}
 
 	/**
@@ -150,6 +197,24 @@ class CommandCoreModelAdd extends JModelBase
 		require_once $source_path . DIRECTORY_SEPARATOR . 'configuration.php';
 		$this->jconfig = new JRegistry;
 		$this->jconfig->loadObject(new JConfig);
+	}
+
+	/**
+	 * Set JVersion
+	 * 
+	 * @return Void
+	 * 
+	 * @since  1.1
+	 **/
+	private function loadJVersion()
+	{
+		// Initialise current joomla paths
+		$source_path = JApplicationCli::getInstance()->get('cwd');
+
+		// Get JVersion object
+		require_once $source_path . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR . 'cms' . DIRECTORY_SEPARATOR .  'version' . DIRECTORY_SEPARATOR . 'version.php';
+		$jversion = new JVersion;
+		$this->jversion = $jversion->getShortVersion();
 	}
 
 	/**
@@ -208,6 +273,18 @@ class CommandCoreModelAdd extends JModelBase
 	 */
 	private function downloadPackageUrl($url, $target = false)
 	{
+		$force = JApplicationCli::getInstance()->input->get('fd', false);
+
+		// If file exists just return basename
+		if (is_file($target) && $force == false)
+		{
+			// Bump the max execution time because not using built in php zip libs are slow
+			@set_time_limit(ini_get('max_execution_time'));
+
+			// Return the name of the downloaded package
+			return basename($target);
+		}
+
 		$logEntry = new JLogEntry(sprintf('downloading %s', $url), JLog::INFO, 'EXTENSION');
 		JLog::add($logEntry);
 

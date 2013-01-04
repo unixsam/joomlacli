@@ -54,7 +54,7 @@ class CommandCoreModelGithub extends JModelBase
 
 			if (200 != $response->code)
 			{
-				Throw new RuntimeException(JText::_('CORE_ERROR_CANT_SERVER_CONNECT'));
+				Throw new RuntimeException(JText::sprintf('CORE_ERROR_CANT_SERVER_CONNECT',$url));
 				return false;
 			}
 
