@@ -27,7 +27,7 @@ class PlgCommandCore extends JPluginCommand
 
 		$git_owner	 = $input->get('git_owner');
 		$git_repo	 = $input->get('git_repo');
-
+		
 		if (!isset($git_owner))
 		{
 			$input->set('git_owner', 'joomla');
@@ -184,6 +184,10 @@ class PlgCommandCore extends JPluginCommand
 	 */
 	public function cmd_install()
 	{
+		if (!function_exists('curl_init')) {
+			throw new RuntimeException(JText::sprintf('PLG_CORE_COMMAND_NEED_PHP_MODULE','curl'));
+		}
+		
 		$modelInstall = JModelFactory::get('command.core.model.install');
 		$modelInstall->prepareVersion();
 		$modelInstall->prepareDirectory();

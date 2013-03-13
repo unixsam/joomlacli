@@ -85,7 +85,7 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 		// If empty url we check github
 		if (empty($url))
 		{
-			$tags = JModelFactory::get('command.core.model.github')->tags($arguments['git_owner'], $arguments['git_repo']);
+			$tags = JModelFactory::get('command.core.model.github')->tags($input->get('git_owner'), $input->get('git_repo'));
 
 			if (!empty($version) && empty($tags->$version))
 			{
@@ -131,8 +131,7 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 		$git_owner	 = $input->get('git_owner');
 		$git_repo	 = $input->get('git_repo');
 
-		if ($git_repo == 'joomla-cms')
-		{
+		if ($git_owner == 'joomla' && $git_repo == 'joomla-cms') {
 			$tags = JModelFactory::get('command.core.model.github')->tags($git_owner, $git_repo);
 
 			JApplicationCli::getInstance()->out(JText::_('PLG_COMMAND_CORE_VERSIONS'));
@@ -158,6 +157,13 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 				}
 			}
 		}
-
+		else {
+			$tags = JModelFactory::get('command.core.model.github')->tags($git_owner, $git_repo);
+			asort($tags);
+			JApplicationCli::getInstance()->out(JText::_('PLG_COMMAND_CORE_VERSIONS'));
+			foreach ($tags as $tag) {
+				JApplicationCli::getInstance()->out(chr(9) . $tag->name);
+			}
+		}
 	}
 }
