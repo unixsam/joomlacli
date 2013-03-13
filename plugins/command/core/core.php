@@ -163,6 +163,10 @@ class plgCommandCore extends KPluginCommand
 	 */
 	public function commandinstall($functions, $arguments)
 	{
+		if (!function_exists('curl_init')) {
+			throw new RuntimeException(JText::sprintf('PLG_CORE_COMMAND_NEED_PHP_MODULE','curl'));
+		}
+		
 		$config = new JRegistry();
 		$config->set('command', $functions);
 		$config->set('arguments', $arguments);
