@@ -30,7 +30,7 @@ class PlgInstallerJoomlacms extends JPlugin implements JPluginInterfaceInstaller
 		// Fix github extraction
 		if ($git_repo == 'joomla-cms')
 		{
-			$source_path = $input->get('pid');
+			$source_path = $input->getString('pid');
 
 			// Check if exists installation folder
 			if (!JFolder::exists($source_path . '/installation'))

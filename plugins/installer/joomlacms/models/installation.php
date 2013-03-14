@@ -26,7 +26,7 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 		$input = JApplicationCli::getInstance()->input;
 
 		$version = $input->get('v');
-		$source_path = $input->get('pid');
+		$source_path = $input->getString('pid');
 		$db_prefix = $input->get('db_prefix', chr(97 + mt_rand(0, 25)) . chr(97 + mt_rand(0, 25)) . chr(97 + mt_rand(0, 25)) . "_");
 		$db_name = $input->get('db_name', 'joo_' . str_replace('.', '_', basename($source_path)));
 

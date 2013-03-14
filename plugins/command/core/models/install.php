@@ -104,7 +104,7 @@ class CommandCoreModelInstall extends JModelBase
 			throw new RuntimeException(JText::_('PLG_CORE_INSTALL_INVALID_SOURCE_URL'));
 		}
 		JApplicationCli::getInstance()->out(JText::_('PLG_CORE_INSTALL_STARTING_INSTALLATION'));
-		$url = $input->get('url');
+		$url = $input->getString('url');
 		$file = $this->file;
 
 		if (!JFile::exists(JPATH_TMP . '/' . $file))
@@ -125,7 +125,7 @@ class CommandCoreModelInstall extends JModelBase
 	{
 		$input = JApplicationCli::getInstance()->input;
 
-		$source_path = $input->get('pid');
+		$source_path = $input->getString('pid');
 
 		// Unpack the downloaded package file
 		try
