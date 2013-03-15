@@ -93,18 +93,23 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 			);
 
 			JModelLegacy::addIncludePath($source_path . '/installation/models');
-
+			JModelLegacy::addIncludePath($source_path . '/installation/model');
+			
+			if (is_file($source_path.'/installation/helper/database.php')) {
+				require_once $source_path.'/installation/helper/database.php';
+			}
+			
 			$modelPrefix = 'InstallationModel';
 			if ($version == '2.5')
 			{
 				$modelPrefix = 'J' . $modelPrefix;
 			}
-
+			
 			// Attempt to create the database tables.
-			$installationModeldatabase		= JModelLegacy::getInstance('database', $modelPrefix, array('dbo' => null));
+			$installationModeldatabase		= JModelLegacy::getInstance('database', $modelPrefix, new JRegistry(array('dbo' => null)));
 
 			// Create configuration and root user
-			$installationModelConfiguration = JModelLegacy::getInstance('configuration', $modelPrefix, array('dbo' => null));
+			$installationModelConfiguration = JModelLegacy::getInstance('configuration', $modelPrefix, new JRegistry(array('dbo' => null)));
 
 			if ($installationModeldatabase == false || $installationModelConfiguration == false)
 			{
@@ -116,7 +121,7 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 
 				$logEntry = new JLogEntry(JText::_('PLG_JOOMLACMS_INSTALLATION_CREATING_DATABASE'), JLog::INFO, 'INSTALLATION');
 				JLog::add($logEntry);
-
+				
 				if ($version == '2.5')
 				{
 					$return = $installationModeldatabase->initialise($options);
@@ -127,24 +132,29 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 						throw new RuntimeException($installationModeldatabase->getError());
 					}
 				}
-				elseif ($version == '3.0')
+				elseif ($version == '3.0' || $version == '3.1')
 				{
-					$return = $installationModeldatabase->createDatabase($options);
-
-					// Check if creation of database tables was successful
-					if (!$return)
-					{
-						throw new RuntimeException($installationModeldatabase->getError());
+					try {
+						$return = $installationModeldatabase->createDatabase($options);
+						
+						// Check if creation of database tables was successful
+						if (!$return)
+						{
+							throw new RuntimeException($installationModeldatabase->getError());
+						}
+	
+						$options['db_created'] = 1;
+	
+						$returnDatabase = $installationModeldatabase->createTables($options);
+	
+						// Check if the database was initialised
+						if (!$returnDatabase)
+						{
+							throw new RuntimeException($installationModeldatabase->getError());
+						}
 					}
-
-					$options['db_created'] = 1;
-
-					$returnDatabase = $installationModeldatabase->createTables($options);
-
-					// Check if the database was initialised
-					if (!$returnDatabase)
-					{
-						throw new RuntimeException($installationModeldatabase->getError());
+					catch (Exception $e) {
+						
 					}
 				}
 

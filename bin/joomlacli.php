@@ -22,7 +22,7 @@ define('JPATH_LOG', JPATH_ETC . '/logs/');
 define('JPATH_CONFIG', JPATH_ETC . '/config/');
 define('JPATH_TMP', JPATH_ETC . '/tmp/');
 
-Phar::loadPhar(realpath(JPATH_LIB . 'joomla-platform12.2.phar'));
+Phar::loadPhar(realpath(JPATH_LIB . 'joomla-platform12.3.phar'));
 
 // Define the path for the Joomla Platform.
 if (!defined('JPATH_PLATFORM'))
@@ -34,7 +34,7 @@ if (!defined('JPATH_PLATFORM'))
 	}
 	else
 	{
-		define('JPATH_PLATFORM', 'phar://joomla-platform12.2.phar/libraries');
+		define('JPATH_PLATFORM', 'phar://joomla-platform12.3.phar/libraries');
 	}
 }
 
