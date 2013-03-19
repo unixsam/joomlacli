@@ -49,6 +49,12 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 			JFactory::$application = null;
 			$installation = JFactory::getApplication('installation');
 
+			if ($installation instanceof JException) {
+				$installation = JApplicationWeb::getInstance('InstallationApplicationWeb');
+			}
+			
+			JFactory::$application = $installation;
+			
 			require_once JPATH_CONFIG . '/database.php';
 			$configDatabase = new JConfigdatabase;
 
@@ -132,9 +138,10 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 						throw new RuntimeException($installationModeldatabase->getError());
 					}
 				}
-				elseif ($version == '3.0' || $version == '3.1')
+				elseif ($version >= '3.0')
 				{
 					try {
+						
 						$return = $installationModeldatabase->createDatabase($options);
 						
 						// Check if creation of database tables was successful
@@ -154,7 +161,7 @@ class InstallerJoomlacmsModelInstallation extends JModelBase
 						}
 					}
 					catch (Exception $e) {
-						
+						die($e->getTraceAsString());
 					}
 				}
 

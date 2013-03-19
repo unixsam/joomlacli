@@ -188,6 +188,8 @@ abstract class JCliPluginHelper
 
 						// Instantiate and register the plugin.
 						new $className($dispatcher, (array) ($plugin));
+						// Loading language from plugin
+						JFactory::getLanguage()->load('plg_'.$plugin->type.'_'.$plugin->name, JPATH_SRC);
 					}
 				}
 			}
